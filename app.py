@@ -28,20 +28,22 @@ import streamlit as st
 # Image and text alignment (side-by-side)
 st.markdown("""
     <div style="display: flex; align-items: center; justify-content: center;">
-        <img src="image.png" style="width:150px; margin-right: 10px;">
-        <p style="font-size: 24px;">LlamaAssist</p>
+        <p style="font-size: 24px;">LlamaAssist 📋</p>
     </div>
-""", unsafe_allow_html=True)
+""", 
+        unsafe_allow_html=True
+        )
 
 
-input_text = st.text_input(
-              "Specify your topic", 
-              value="", 
-              max_chars=None, 
-              key=None, 
-              type="default", 
-              label_visibility="visible"
-              )
+input_text = input_text = st.text_area(
+    "Write About Your Topic", 
+    value="", 
+    height=200,  # You can adjust the height if you like
+    max_chars=None, 
+    key=None, 
+    label_visibility="visible"
+)
+
 
 column1, column2 = st.columns([10, 10])
 
@@ -56,10 +58,10 @@ with column1:
     
 with column2:
     user_type = st.selectbox(
-    "How are you?",
+    "Difficulty Level?",
     ("Student", "Teacher", "Content Writer"), index=0)
 
-submit_button = st.button("Start Generate", help ="Press Submit Button to Start Generation")
+submit_button = st.button("Start Generate", help ="Press Submit Button to Start")
 
 if submit_button:
     st.write(getresponse(input_text, no_of_words, user_type))
