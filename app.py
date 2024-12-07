@@ -4,8 +4,8 @@ import streamlit as st
 from chatbot import getresponse
 
 st.set_page_config(
-    page_title="LlamaAssist",
-    page_icon="🧊",
+    page_title="LlamaAssist 📋",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
