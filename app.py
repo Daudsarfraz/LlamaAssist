@@ -38,7 +38,7 @@ st.markdown("""
 input_text = input_text = st.text_area(
     "Write About Your Topic", 
     value="", 
-    height=200,  # You can adjust the height if you like
+    height=150,  # You can adjust the height if you like
     max_chars=None, 
     key=None, 
     label_visibility="visible"
@@ -48,7 +48,7 @@ input_text = input_text = st.text_area(
 column1, column2 = st.columns([10, 10])
 
 with column1:
-    no_of_words = st.text_input("Enter length og blog", 
+    no_of_words = st.text_input("Enter length of Desired Output:", 
               value="", 
               max_chars=None, 
               key=None, 
@@ -59,9 +59,9 @@ with column1:
 with column2:
     user_type = st.selectbox(
     "Difficulty Level?",
-    ("Student", "Teacher", "Content Writer"), index=0)
+    ("Beginner", "Intermediate", "Expert"), index=0)
 
-submit_button = st.button("Start Generate", help ="Press Submit Button to Start")
+submit_button = st.button("Start", help ="Press Submit Button to Start")
 
 if submit_button:
     st.write(getresponse(input_text, no_of_words, user_type))
