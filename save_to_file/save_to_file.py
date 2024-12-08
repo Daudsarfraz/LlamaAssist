@@ -1,27 +1,32 @@
 import os
-def create_file(file_name):
+
+# def read_file(file_name, mode = None):
+#     with open(file_name, mode) as f:
+#         print(f.read())
+#     f.close()
+
+
+def create_file(file_name, content, moode = "a"):
 
     try:
         file_found = [i for i in os.listdir(os.getcwd()) if i==file_name]
         if file_found:
-            print("Entered File Found", file_name)
+            with open(file_name, moode) as f:
+                f.write(content)
+            f.close()
         else:
-             with open(file_name, "w") as f:
-                  print(f"File {file_name} has been created")
-
-
-
+            with open(file_name, moode) as f:
+                f.write(content)
+            f.close()
     except Exception as e:
             print(f"{e}")
-        # with open(file_name, "a") as f:
-        #     print("File is Created", file_name)
-
-        #     f.close()
 
 
 
 
-
+content = "I am LLAMA 3"
 file_name = "words_count12.txt"
-create_file(file_name)
+create_file(file_name, content)
+# read_file(file_name, mode="r")
+
 

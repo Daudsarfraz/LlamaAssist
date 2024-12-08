@@ -1,6 +1,8 @@
 import streamlit as st
 
 from chatbot import getresponse
+from save_to_file import create_file
+
 
 st.set_page_config(
     page_title="LlamaAssist 📋",
@@ -24,6 +26,8 @@ st.markdown("""
         unsafe_allow_html=True
         )
 
+import streamlit as st
+
 # Initialize session state variables if they don't exist
 if "input_text" not in st.session_state:
     st.session_state.input_text = ""
@@ -32,46 +36,62 @@ if "no_of_words" not in st.session_state:
 if "user_type" not in st.session_state:
     st.session_state.user_type = "Beginner"
 
-# Input text box
-st.session_state.input_text = st.text_area(
+# Callback functions to handle updates
+def update_input_text():
+    st.session_state.input_text = st.session_state.input_area
+
+def update_no_of_words():
+    st.session_state.no_of_words = st.session_state.length_input
+
+# Text area for input text
+st.text_area(
     "Write About Your Topic", 
-    value=st.session_state.input_text,  # Store the input in session state
-    height=150,  # Adjust the height if needed
-    max_chars=None, 
-    key="input_text", 
-    label_visibility="visible"
+    value=st.session_state.input_text,
+    height=150,
+    max_chars=None,
+    key="input_area",
+    on_change=update_input_text
 )
 
 # Columns for input length and difficulty level
-column1, column2 = st.columns([10, 10])
+column1, column2 = st.columns(2)
 
 with column1:
-    st.session_state.no_of_words = st.text_input(
+    st.text_input(
         "Enter length of Desired Output:", 
-        value=st.session_state.no_of_words,  # Store in session state
-        max_chars=None, 
-        key="no_of_words", 
-        type="default", 
-        label_visibility="visible"
+        value=st.session_state.no_of_words,
+        max_chars=None,
+        key="length_input",
+        on_change=update_no_of_words
     )
 
 with column2:
-    st.session_state.user_type = st.selectbox(
+    st.selectbox(
         "Difficulty Level?",
         ("Beginner", "Intermediate", "Expert"), 
-        index=("Beginner", "Intermediate", "Expert").index(st.session_state.user_type)  # Keep the default state
+        index=("Beginner", "Intermediate", "Expert").index(st.session_state.user_type),
+        key="user_type"
     )
 
 # Submit button
-submit_button = st.button("Start", help="Press Submit Button to Start")
-
-# Handle button click
-if submit_button:
-    if not st.session_state.input_text:
+if st.button("Start", help="Press Submit Button to Start"):
+    if not st.session_state.input_text.strip():
         st.error("Please provide input text.")
-    elif not st.session_state.no_of_words:
+    elif not st.session_state.no_of_words.strip():
         st.error("Please provide the desired output length.")
     else:
         # Call the getresponse function with updated parameters
-        output = getresponse(st.session_state.input_text, st.session_state.no_of_words, st.session_state.user_type)
+        output = getresponse(
+            st.session_state.input_text, 
+            st.session_state.no_of_words, 
+            st.session_state.user_type
+        )
         st.write(output)
+
+        # Create and save the output file
+        file_name = "llama"
+        write_to_file = create_file(file_name, output)
+        
+        # Reset input fields
+        # st.session_state.input_text = ""
+        # st.session_state.no_of_words = ""
