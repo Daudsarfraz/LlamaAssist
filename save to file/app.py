@@ -15,15 +15,6 @@ st.set_page_config(
     }
 )
 
-# st.header(
-#     "LlamaAssist", 
-#     anchor=None, 
-#     help=None, 
-#     divider=False
-#       )
-
-
-import streamlit as st
 
 # Image and text alignment (side-by-side)
 st.markdown("""
@@ -34,35 +25,54 @@ st.markdown("""
         unsafe_allow_html=True
         )
 
+# Initialize session state variables if they don't exist
+if "input_text" not in st.session_state:
+    st.session_state.input_text = ""
+if "no_of_words" not in st.session_state:
+    st.session_state.no_of_words = ""
+if "user_type" not in st.session_state:
+    st.session_state.user_type = "Beginner"
 
-input_text = input_text = st.text_area(
+# Input text box
+st.session_state.input_text = st.text_area(
     "Write About Your Topic", 
-    value="", 
-    height=150,  # You can adjust the height if you like
+    value=st.session_state.input_text,  # Store the input in session state
+    height=150,  # Adjust the height if needed
     max_chars=None, 
-    key=None, 
+    key="input_text", 
     label_visibility="visible"
 )
 
-
+# Columns for input length and difficulty level
 column1, column2 = st.columns([10, 10])
 
 with column1:
-    no_of_words = st.text_input("Enter length of Desired Output:", 
-              value="", 
-              max_chars=None, 
-              key=None, 
-              type="default", 
-              label_visibility="visible"
-              )
-    
+    st.session_state.no_of_words = st.text_input(
+        "Enter length of Desired Output:", 
+        value=st.session_state.no_of_words,  # Store in session state
+        max_chars=None, 
+        key="no_of_words", 
+        type="default", 
+        label_visibility="visible"
+    )
+
 with column2:
-    user_type = st.selectbox(
-    "Difficulty Level?",
-    ("Beginner", "Intermediate", "Expert"), index=0)
+    st.session_state.user_type = st.selectbox(
+        "Difficulty Level?",
+        ("Beginner", "Intermediate", "Expert"), 
+        index=("Beginner", "Intermediate", "Expert").index(st.session_state.user_type)  # Keep the default state
+    )
 
-submit_button = st.button("Start", help ="Press Submit Button to Start")
+# Submit button
+submit_button = st.button("Start", help="Press Submit Button to Start")
 
+# Handle button click
 if submit_button:
-    st.write(getresponse(input_text, no_of_words, user_type))
-
+    if not st.session_state.input_text:
+        st.error("Please provide input text.")
+    elif not st.session_state.no_of_words:
+        st.error("Please provide the desired output length.")
+    else:
+        # Call the getresponse function with updated parameters
+        output = getresponse(st.session_state.input_text, st.session_state.no_of_words, st.session_state.user_type)
+        st.write(output)
